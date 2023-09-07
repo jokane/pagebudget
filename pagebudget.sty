@@ -1,0 +1,24 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pagebudget}[2023/09/07 Page Budget]
+\newif\if@final
+\@finalfalse
+\DeclareOption{draft}{\@finalfalse}
+\DeclareOption{final}{\@finaltrue}
+
+\ProcessOptions
+
+\RequirePackage{fp}
+\RequirePackage{color}
+
+
+\newcommand{\pagebudget}[1]{\marginpar{\footnotesize\color{red}(#1~\FPifeq{#1}{1}page\else pages\fi)}\FPadd{\pb}{\pb}{#1}}
+\newcommand{\showtotalpagebudget}{\marginpar{\footnotesize\color{red}Total\\budgeted\\pages: \FPclip\pb\pb\FPprint{\pb}~of~6}}
+
+\if@final
+  \renewcommand{\pagebudget}[1]{}
+  \renewcommand{\showtotalpagebudget}[1]{}
+\else
+  \FPset{\pb}{0}
+\fi
+
+\AtEndDocument{\showtotalpagebudget}
